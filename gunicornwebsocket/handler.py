@@ -44,7 +44,6 @@ class WebSocketHandler(object):
             elif environ.get("HTTP_ORIGIN"):
                 result = self._handle_hixie(environ)
 
-            self.result = []
             if not result:
                 return
 
