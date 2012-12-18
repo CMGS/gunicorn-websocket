@@ -8,7 +8,7 @@ from socket import error as socket_error
 from urllib import quote
 from gunicorn.workers.async import ALREADY_HANDLED
 
-from geventwebsocket.websocket import WebSocketHybi, WebSocketHixie
+from gunicornwebsocket.websocket import WebSocketHybi, WebSocketHixie
 
 class WebSocketHandler(object):
 

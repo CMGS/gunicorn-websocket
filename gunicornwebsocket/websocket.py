@@ -1,7 +1,9 @@
 import struct
 
-from errno import EINTR
-from gevent.coros import Semaphore
+try:
+    from gevent.lock import Semaphore
+except ImportError:
+    from threading import Semaphore
 
 from python_fixes import makefile, is_closed
 from exceptions import FrameTooLargeException, WebSocketError
@@ -291,7 +293,7 @@ class WebSocketHybi(WebSocket):
         elif opcode == self.OPCODE_BINARY:
             return result, True
         else:
-            raise AssertionError('internal serror in gevent-websocket: opcode=%r' % (opcode, ))
+            raise AssertionError('internal serror in gunicorn-websocket: opcode=%r' % (opcode, ))
 
     def receive(self):
         result = self._receive()

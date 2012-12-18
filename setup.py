@@ -8,7 +8,7 @@ setup(
     author_email="ilskdw@gmail.me",
     license="BSD",
     url="http://code.dapps.douban.com/gunicorn-websocket",
-    install_requires=("gunicorn", ),
+    install_requires=("gunicorn", "gevent"),
     packages=find_packages(exclude=["examples","tests"]),
     classifiers=[
         "Development Status :: 4 - Beta",
