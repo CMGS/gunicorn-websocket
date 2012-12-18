@@ -1,2 +1,3 @@
 *.pyc
+dist/*
 gunicorn_websocket.egg-info/*
