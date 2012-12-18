@@ -3,7 +3,8 @@ from setuptools import setup, find_packages
 setup(
     name="gunicorn-websocket",
     version="0.0.1",
-    description="Websocket handler for the gunicorn server, a Python network library",
+    description="Websocket handler for the gunicorn server, a Python wsgi server, fork and modify from gevent-websocket",
+    long_description=open("README.rst").read(),
     author="CMGS",
     author_email="ilskdw@gmail.me",
     license="BSD",
