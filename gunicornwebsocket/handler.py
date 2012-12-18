@@ -119,6 +119,7 @@ class WebSocketHandler(object):
     def _handle_hixie(self, environ):
         assert "upgrade" in environ.get("HTTP_CONNECTION", "").lower()
         socket = environ['gunicorn.socket']
+        body = environ['wsgi.input']
 
         websocket = WebSocketHixie(socket, environ)
         environ['wsgi.websocket'] = websocket
@@ -156,7 +157,7 @@ class WebSocketHandler(object):
             self._send_reply(socket, "101 WebSocket Protocol Handshake", headers)
 
             # This request should have 8 bytes of data in the body
-            key3 = self.rfile.read(8)
+            key3 = body.read(8)
 
             challenge = md5(struct.pack("!II", part1, part2) + key3).digest()
 

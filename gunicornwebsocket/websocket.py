@@ -35,9 +35,13 @@ class WebSocketHixie(WebSocket):
 
     def close(self):
         if self.fobj is not None:
-            self.fobj.close()
-            self.fobj = None
-            self._write = None
+            try:
+                self._write("\xff\x00")
+                self.fobj.close()
+                self.fobj = None
+                self._write = None
+            except Exception:
+                pass
 
     def _message_length(self):
         length = 0
@@ -76,6 +80,9 @@ class WebSocketHixie(WebSocket):
                 break
 
         return ''.join(bytes)
+
+    def wait(self):
+        return self.receive()
 
     def receive(self):
         read = self.fobj.read
@@ -294,6 +301,9 @@ class WebSocketHybi(WebSocket):
             return result, True
         else:
             raise AssertionError('internal serror in gunicorn-websocket: opcode=%r' % (opcode, ))
+
+    def wait(self):
+        return self.receive()
 
     def receive(self):
         result = self._receive()
