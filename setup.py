@@ -6,7 +6,7 @@ setup(
     description="Websocket handler for the gunicorn server, a Python wsgi server, fork and modify from gevent-websocket",
     long_description=open("README.rst").read(),
     author="CMGS",
-    author_email="ilskdw@gmail.me",
+    author_email="ilskdw@gmail.com",
     license="BSD",
     url="http://code.dapps.douban.com/gunicorn-websocket",
     install_requires=("gunicorn", "gevent"),
