@@ -125,7 +125,7 @@ class WebSocketHybi(WebSocket):
 
     def _parse_header(self, data):
         if len(data) != 2:
-            self._close()
+            #self._close()
             raise WebSocketError('Incomplete read while reading header: %r' % data)
 
         first_byte, second_byte = struct.unpack('!BB', data)
@@ -187,7 +187,7 @@ class WebSocketHybi(WebSocket):
             data0 = read(2)
 
             if not data0:
-                self._close()
+                #self._close()
                 return
 
             fin, opcode, has_mask, length = self._parse_header(data0)
@@ -218,7 +218,7 @@ class WebSocketHybi(WebSocket):
 
             mask = read(4)
             if len(mask) != 4:
-                self._close()
+                #self._close()
                 raise WebSocketError('Incomplete read while reading mask: %r' % (data0 + data1 + mask))
 
             mask = struct.unpack('!BBBB', mask)
@@ -226,7 +226,7 @@ class WebSocketHybi(WebSocket):
             if length:
                 payload = read(length)
                 if len(payload) != length:
-                    self._close()
+                    #self._close()
                     args = (length, len(payload))
                     raise WebSocketError('Incomplete read: expected message of %s bytes, got %s bytes' % args)
             else:
@@ -273,7 +273,7 @@ class WebSocketHybi(WebSocket):
                     self.close_code = struct.unpack('!H', str(f_payload[:2]))[0]
                     self.close_message = f_payload[2:]
                 elif f_payload:
-                    self._close()
+                    #self._close()
                     raise WebSocketError('Invalid close frame: %s %s %s' % (f_fin, f_opcode, repr(f_payload)))
                 code = self.close_code
                 if code is None or (code >= 1000 and code < 5000):
@@ -288,7 +288,7 @@ class WebSocketHybi(WebSocket):
             elif f_opcode == self.OPCODE_PONG:
                 continue
             else:
-                self._close()  # XXX should send proper reason?
+                #self._close()  # XXX should send proper reason?
                 raise WebSocketError("Unexpected opcode=%r" % (f_opcode, ))
 
             result.extend(f_payload)
