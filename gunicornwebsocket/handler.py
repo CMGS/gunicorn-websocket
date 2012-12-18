@@ -1,6 +1,7 @@
 import base64
 import socket
 import re
+import logging
 import errno
 import struct
 from hashlib import md5, sha1
@@ -9,6 +10,8 @@ from urllib import quote
 from gunicorn.workers.async import ALREADY_HANDLED
 
 from gunicornwebsocket.websocket import WebSocketHybi, WebSocketHixie
+
+logger = logging.getLogger(__name__)
 
 class WebSocketHandler(object):
 
@@ -21,9 +24,6 @@ class WebSocketHandler(object):
     def __call__(self, environ, start_response):
         self.pre_start()
 
-        self.request_version = environ.get('SERVER_PROTOCOL', 'HTTP/1.1')
-        self.socket = environ['gunicorn.socket']
-        self.environ = environ
         upgrade = environ.get('HTTP_UPGRADE', '').lower()
 
         if upgrade == 'websocket':
@@ -66,7 +66,7 @@ class WebSocketHandler(object):
         environ['wsgi.websocket_version'] = 'hybi-%s' % version
 
         if version not in self.SUPPORTED_VERSIONS:
-            #self.log_error('400: Unsupported Version: %r', version)
+            logger.error('400: Unsupported Version: %r', version)
             self.respond(socket, \
                 '400 Unsupported Version',
                 [('Sec-WebSocket-Version', '13, 8, 7')]
@@ -92,16 +92,16 @@ class WebSocketHandler(object):
         # XXX: nobody seems to set SERVER_NAME correctly. check the spec
         #elif not environ.get("HTTP_HOST") == environ.get("SERVER_NAME"):
             # 5.2.1 (2)
-            #self.respond('400 Bad Request')
+            #logger.error('400 Bad Request')
             #return
         elif not key:
             # 5.2.1 (3)
-            #self.log_error('400: HTTP_SEC_WEBSOCKET_KEY is missing from request')
+            logger.error('400: HTTP_SEC_WEBSOCKET_KEY is missing from request')
             self.respond(socket, '400 Bad Request')
             return
         elif len(base64.b64decode(key)) != 16:
             # 5.2.1 (3)
-            #self.log_error('400: Invalid key: %r', key)
+            logger.error('400: Invalid key: %r', key)
             self.respond(socket, '400 Bad Request')
             return
 
@@ -129,11 +129,11 @@ class WebSocketHandler(object):
         if key1 is not None:
             environ['wsgi.websocket_version'] = 'hixie-76'
             if not key1:
-                #self.log_error("400: SEC-WEBSOCKET-KEY1 header is empty")
+                logger.error("400: SEC-WEBSOCKET-KEY1 header is empty")
                 self.respond(socket, '400 Bad Request')
                 return
             if not key2:
-                #self.log_error("400: SEC-WEBSOCKET-KEY2 header is missing or empty")
+                logger.error("400: SEC-WEBSOCKET-KEY2 header is missing or empty")
                 self.respond(socket, '400 Bad Request')
                 return
 
@@ -202,8 +202,7 @@ class WebSocketHandler(object):
         spaces = re.subn(" ", "", key_value)[1]
 
         if key_number % spaces != 0:
-            pass
-            #self.log_error("key_number %d is not an intergral multiple of spaces %d", key_number, spaces)
+            logger.error("key_number %d is not an intergral multiple of spaces %d", key_number, spaces)
         else:
             return key_number / spaces
 
