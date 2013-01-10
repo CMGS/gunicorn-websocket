@@ -47,9 +47,8 @@ class WebSocketHandler(object):
             if not result:
                 return
 
-            ws = environ.get("wsgi.websocket")
             try:
-                self.handler(ws)
+                self.handler(environ, lambda c, h:None)
             except socket.error, e:
                 if e[0] != errno.EPIPE:
                     raise

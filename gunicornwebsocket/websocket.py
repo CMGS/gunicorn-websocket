@@ -374,7 +374,7 @@ class WebSocketHybi(WebSocket):
             self.socket = None
             self._write = None
 
-            if not self._reading:
-                self.fobj.close()
+            #if not self._reading:
+            #    self.fobj.close()
 
-            self.fobj = None
+            #self.fobj = None
