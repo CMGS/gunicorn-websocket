@@ -54,7 +54,7 @@ class WebSocketHandler(object):
                     raise
             # use this undocumented feature of grainbows to ensure that it
             # doesn't barf on the fact that we didn't call start_response
-            return [ALREADY_HANDLED]
+            return ALREADY_HANDLED
         finally:
             pass
             #self.log_request()
